@@ -2,10 +2,54 @@
     ViewData["Title"] = "Exercises";
 }
 
+@model List<Exercise>;
 <h1>Exercises</h1>
 
-<a href="/exercises/create" class="btn btn-primary">Create Exercise</a> <br />
-
 <div class="form-group">
-    <input type="text" class="form-control" placeholder="Search Exercise" />
+    <a href="/exercises/create" class="btn btn-primary">Create Exercise</a>
+</div>
+<br />
+<form method="get" action="/exercises">
+    <div class="form-group d-flex">
+        <input type="text" name="search" class="form-control" placeholder="Search Exercise" value=@ViewBag.Search />
+        <button type="submit" class="btn btn-secondary">Search</button>
+    </div>
+    <div class="form-group">
+        <select name="filter" class="form-control">
+            <option value="all" selected>All Muscle Groups</option>
+            @foreach (var muscleGroup in Enum.GetValues(typeof(MuscleGroup)))
+            {
+                if (ViewBag.Filter == muscleGroup.ToString())
+                {
+                    <option value="@muscleGroup" selected>@muscleGroup</option>
+                }
+                else
+                {
+                    <option value="@muscleGroup">@muscleGroup</option>
+                }
+            }
+            )
+        </select>
+    </div>
+</form>
+<div class="form-group">
+    <table class="table">
+        <tr>
+            <th>Exercise Name</th>
+            <th>Muscle Group</th>
+            <th>Difficulty</th>
+            <th>Recommended Reps</th>
+            <th>Description</th>
+        </tr>
+        @foreach (var exercise in Model)
+        {
+            <tr>
+                <td>@exercise.ExerciseName</td>
+                <td>@exercise.MuscleGroup</td>
+                <td>@exercise.Difficulty</td>
+                <td>@exercise.RecommendedReps</td>
+                <td>@exercise.Description</td>
+            </tr>
+        }
+    </table>
 </div>
