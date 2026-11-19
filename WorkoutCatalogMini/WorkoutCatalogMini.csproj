@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WorkoutCatalogMini.Data\WorkoutCatalogMini.Data.csproj" />
+    <ProjectReference Include="..\WorkoutCatalogMini.Services\WorkoutCatalogMini.Services.csproj" />
   </ItemGroup>
 
 </Project>
