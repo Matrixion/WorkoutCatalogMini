@@ -3,34 +3,35 @@ using System.Diagnostics;
 using WorkoutCatalogMini.Models;
 using WorkoutCatalogMini.Data.Entities;
 using WorkoutCatalogMini.Data.Enums;
+using WorkoutCatalogMini.Data;
 
 namespace WorkoutCatalogMini.Controllers
 {
     public class ExercisesController : Controller
     {
-        private readonly ILogger<ExercisesController> _logger;
-        private static List<Exercise> exercises = new List<Exercise>
-        {
-            new Exercise { ExerciseId = 1, ExerciseName = "Push-up", MuscleGroup = MuscleGroup.Chest, Difficulty = Difficulty.Easy, RecommendedReps = 10, Description = "A basic upper body exercise that targets the chest, shoulders, and triceps." },
-            new Exercise { ExerciseId = 2, ExerciseName = "Squat", MuscleGroup = MuscleGroup.Quads, Difficulty = Difficulty.Easy, RecommendedReps = 15, Description = "A lower body exercise that targets the quadriceps, hamstrings, and glutes." },
-            new Exercise { ExerciseId = 3, ExerciseName = "Plank", MuscleGroup = MuscleGroup.Abs, Difficulty = Difficulty.Medium, RecommendedReps = 30, Description = "An isometric core exercise that strengthens the abdominal muscles and lower back." }
-        };
-        private static int nextId = 4;
+        private readonly AppDbContext _context;
 
-        public ExercisesController(ILogger<ExercisesController> logger)
+        public ExercisesController(AppDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index(string search, string filter)
         {
-            var filteredExercises = exercises;
+            if (!_context.Exercises.Any())
+            {
+                _context.Exercises.Add(new Exercise { ExerciseName = "Push-up", MuscleGroup = MuscleGroup.Chest, Difficulty = Difficulty.Easy, RecommendedReps = 10, Description = "A basic upper body exercise that targets the chest, shoulders, and triceps." });
+                _context.Exercises.Add(new Exercise { ExerciseName = "Squat", MuscleGroup = MuscleGroup.Quads, Difficulty = Difficulty.Easy, RecommendedReps = 15, Description = "A lower body exercise that targets the quadriceps, hamstrings, and glutes." });
+                _context.Exercises.Add(new Exercise { ExerciseName = "Plank", MuscleGroup = MuscleGroup.Abs, Difficulty = Difficulty.Medium, RecommendedReps = 30, Description = "An isometric core exercise that strengthens the abdominal muscles and lower back." });
+                _context.SaveChanges();
+            }
+            var exercises = _context.Exercises.ToList();
 
             if (!string.IsNullOrEmpty(search))
             {
                 ViewBag.Search = search;
 
-                filteredExercises = filteredExercises
+                exercises = exercises
                     .Where(e => e.ExerciseName.ToLower().Contains(search.ToLower()))
                     .ToList();
             }
@@ -38,11 +39,11 @@ namespace WorkoutCatalogMini.Controllers
             {
                 ViewBag.Filter = filter;
 
-                filteredExercises = filteredExercises
+                exercises = exercises
                     .Where(e => e.MuscleGroup.ToString() == filter)
                     .ToList();
             }
-            return View(filteredExercises);
+            return View(exercises);
         }
 
         [HttpGet]
@@ -64,8 +65,8 @@ namespace WorkoutCatalogMini.Controllers
                 return View(exercise);
             }
 
-            exercise.ExerciseId = nextId++;
-            exercises.Add(exercise);
+            _context.Exercises.Add(exercise);
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
 
