@@ -1,4 +1,4 @@
-﻿namespace WorkoutCatalogMini.Models
+﻿namespace WorkoutCatalogMini.Data.Enums
 {
     public enum MuscleGroup
     {

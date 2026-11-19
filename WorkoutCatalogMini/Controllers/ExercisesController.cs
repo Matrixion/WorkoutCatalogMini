@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WorkoutCatalogMini.Models;
+using WorkoutCatalogMini.Data.Entities;
+using WorkoutCatalogMini.Data.Enums;
 
 namespace WorkoutCatalogMini.Controllers
 {

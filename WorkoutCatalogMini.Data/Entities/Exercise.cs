@@ -1,4 +1,6 @@
-﻿namespace WorkoutCatalogMini.Models
+﻿using WorkoutCatalogMini.Data.Enums;
+
+namespace WorkoutCatalogMini.Data.Entities
 {
     public class Exercise
     {
@@ -7,7 +9,7 @@
         public MuscleGroup MuscleGroup { get; set; }
         public Difficulty Difficulty { get; set; }
         public int RecommendedReps { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 }
 
