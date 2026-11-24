@@ -1,11 +1,11 @@
 ﻿using WorkoutCatalogMini.Data.Entities;
-using WorkoutCatalogMini.Data.Enums;
 
 namespace WorkoutCatalogMini.Services.Interfaces
 {
     public interface IExerciseService
     {
         Task<List<Exercise>> GetFilteredExercises(string search, string filter);
-        Task AddExercise(Exercise exercise);
+        Task CreateExercise(string name, string muscle, string difficulty, int reps, string? description);
+        Task<List<MuscleGroup>> GetMuscleGroups();
     }
 }

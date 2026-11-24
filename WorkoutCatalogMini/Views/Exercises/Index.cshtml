@@ -1,58 +1,60 @@
-﻿@using WorkoutCatalogMini.Data.Entities;
-@using WorkoutCatalogMini.Data.Enums;
+﻿@using WorkoutCatalogMini.Data.Entities
+@model List<Exercise>
 
 @{
     ViewData["Title"] = "Exercises";
+    var muscleGroups = ViewBag.MuscleGroups as List<MuscleGroup> ?? new List<MuscleGroup>();
+    var selectedFilter = ViewBag.Filter as string ?? "all";
 }
 
-@model List<Exercise>;
 <h1>Exercises</h1>
 
-<div class="form-group">
-    <a href="/exercises/create" class="btn btn-primary">Create Exercise</a>
+<div class="form-group mb-3">
+    <a asp-controller="Exercises" asp-action="Create" class="btn btn-primary">Create Exercise</a>
 </div>
-<br />
-<form method="get" action="/exercises">
-    <div class="form-group d-flex">
-        <input type="text" name="search" class="form-control" placeholder="Search Exercise" value=@ViewBag.Search />
+
+<form method="get" asp-controller="Exercises" asp-action="Index" class="mb-3">
+    <div class="form-group d-flex gap-2 mb-2">
+        <input type="text" name="search" class="form-control" placeholder="Search Exercise" value="@ViewBag.Search" />
         <button type="submit" class="btn btn-secondary">Search</button>
     </div>
-    <div class="form-group">
+
+    <div class="form-group d-flex gap-2">
         <select name="filter" class="form-control">
-            <option value="all" selected>All Muscle Groups</option>
-            @foreach (var muscleGroup in Enum.GetValues(typeof(MuscleGroup)))
+            <option value="all" selected="@(selectedFilter == "all")">All Muscle Groups</option>
+            @foreach (var muscle in muscleGroups)
             {
-                if (ViewBag.Filter == muscleGroup.ToString())
-                {
-                    <option value="@muscleGroup" selected>@muscleGroup</option>
-                }
-                else
-                {
-                    <option value="@muscleGroup">@muscleGroup</option>
-                }
+                <option value="@muscle.MuscleGroupId" selected="@(selectedFilter == muscle.MuscleGroupId.ToString())">
+                    @muscle.MuscleName
+                </option>
             }
-            )
         </select>
+        <button type="submit" class="btn btn-outline-secondary">Filter</button>
     </div>
 </form>
-<div class="form-group">
-    <table class="table">
+
+<table class="table">
+    <thead>
         <tr>
             <th>Exercise Name</th>
-            <th>Muscle Group</th>
+            <th>Muscle Groups</th>
             <th>Difficulty</th>
             <th>Recommended Reps</th>
             <th>Description</th>
         </tr>
+    </thead>
+    <tbody>
         @foreach (var exercise in Model)
         {
             <tr>
                 <td>@exercise.ExerciseName</td>
-                <td>@exercise.MuscleGroup</td>
-                <td>@exercise.Difficulty</td>
+                <td>
+                    @string.Join(", ", exercise.MuscleGroups.Select(x => x.MuscleGroup.MuscleName))
+                </td>
+                <td>@exercise.Difficulty?.DifficultyName</td>
                 <td>@exercise.RecommendedReps</td>
                 <td>@exercise.Description</td>
             </tr>
         }
-    </table>
-</div>
+    </tbody>
+</table>

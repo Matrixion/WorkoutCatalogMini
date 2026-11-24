@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using WorkoutCatalogMini.Models;
 using WorkoutCatalogMini.Data.Entities;
-using WorkoutCatalogMini.Data.Enums;
 using WorkoutCatalogMini.Data;
 using WorkoutCatalogMini.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
@@ -23,6 +22,8 @@ namespace WorkoutCatalogMini.Controllers
             ViewBag.Search = search;
             ViewBag.Filter = filter;
 
+            ViewBag.MuscleGroups = await _service.GetMuscleGroups();
+
             var exercises = await _service.GetFilteredExercises(search, filter);
             return View(exercises);
         }
@@ -34,35 +35,29 @@ namespace WorkoutCatalogMini.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Exercise exercise)
+        public async Task<IActionResult> Create(string? name, string? muscle, string? difficulty, int reps, string? description)
         {
-            if (exercise.ExerciseName.IsNullOrEmpty())
-            {
+            if (string.IsNullOrWhiteSpace(name))
                 ViewBag.Message = "Exercise must have a name.";
-                ViewBag.ExerciseName = exercise.ExerciseName;
-                ViewBag.MuscleGroup = exercise.MuscleGroup.ToString();
-                ViewBag.Difficulty = exercise.Difficulty.ToString();
-                ViewBag.Description = exercise.Description;
-                return View(exercise);
-            }
-            if (exercise.RecommendedReps < 1)
+            else if (string.IsNullOrWhiteSpace(muscle))
+                ViewBag.Message = "Please enter a muscle group.";
+            else if (string.IsNullOrWhiteSpace(difficulty))
+                ViewBag.Message = "Please enter a difficulty level.";
+            else if (reps < 1)
+                ViewBag.Message = "Recommended reps must be greater than 0.";
+
+            if (ViewBag.Message != null)
             {
-                ViewBag.Message = "Recommended Reps must be greater than 0.";
-                ViewBag.ExerciseName = exercise.ExerciseName;
-                ViewBag.MuscleGroup = exercise.MuscleGroup.ToString();
-                ViewBag.Difficulty = exercise.Difficulty.ToString();
-                ViewBag.Description = exercise.Description;
-                return View(exercise);
+                ViewBag.ExerciseName = name;
+                ViewBag.MuscleGroup = muscle;
+                ViewBag.Difficulty = difficulty;
+                ViewBag.RecommendedReps = reps;
+                ViewBag.Description = description;
+                return View();
             }
 
-            await _service.AddExercise(exercise);
-            return RedirectToAction("Index");
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            await _service.CreateExercise(name!, muscle!, difficulty!, reps, description);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

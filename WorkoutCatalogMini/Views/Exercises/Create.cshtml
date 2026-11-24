@@ -1,61 +1,41 @@
-﻿@using WorkoutCatalogMini.Data.Enums;
-
-@{
-    ViewData["Title"] = "Create";
+﻿@{
+    ViewData["Title"] = "Create Exercise";
 }
 
-<form method="post" action="/exercises/create">
-    <div class="form-group">
+<h1>Create Exercise</h1>
+
+<form method="post" asp-controller="Exercises" asp-action="Create">
+    @Html.AntiForgeryToken()
+    <div class="form-group mb-3">
         <label for="exercise-name">Exercise Name</label>
-        <input type="text" class="form-control" id="exercise-name" name="ExerciseName" value="@ViewBag.ExerciseName">
+        <input type="text" class="form-control" id="exercise-name" name="name" value="@ViewBag.ExerciseName" required />
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label for="muscle-group">Muscle Group</label>
-        <select class="form-control" id="muscle-group" name="MuscleGroup">
-            @foreach (var muscleGroup in Enum.GetValues(typeof(MuscleGroup)))
-            {
-                if (muscleGroup.ToString() == ViewBag.MuscleGroup)
-                {
-                    <option value="@muscleGroup" selected>@muscleGroup</option>
-                }
-                else
-                {
-                    <option value="@muscleGroup">@muscleGroup</option>
-                }
-            }
-        </select>
+        <input type="text" class="form-control" id="muscle-group" name="muscle" value="@ViewBag.MuscleGroup" required />
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label for="difficulty">Difficulty</label>
-        <select class="form-control" id="difficulty" name="Difficulty">
-            @foreach (var difficulty in Enum.GetValues(typeof(Difficulty)))
-            {
-                if (difficulty.ToString() == ViewBag.Difficulty)
-                {
-                    <option value="@difficulty" selected>@difficulty</option>
-                }
-                else
-                {
-                    <option value="@difficulty">@difficulty</option>
-                }
-            }
+        <select class="form-control" id="difficulty" name="difficulty" required>
+            <option value="">Select difficulty</option>
+            <option value="Beginner" selected="@((string?)ViewBag.Difficulty == "Beginner")">Beginner</option>
+            <option value="Intermediate" selected="@((string?)ViewBag.Difficulty == "Intermediate")">Intermediate</option>
+            <option value="Advanced" selected="@((string?)ViewBag.Difficulty == "Advanced")">Advanced</option>
         </select>
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label for="recommended-reps">Recommended Reps</label>
-        <input type="number" class="form-control" id="recommended-reps" name="RecommendedReps">
+        <input type="number" min="1" class="form-control" id="recommended-reps" name="reps" value="@ViewBag.RecommendedReps" required />
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label for="description">Description</label>
-        <input type="text" class="form-control" id="description" name="Description" value="@ViewBag.Description">
+        <textarea class="form-control" id="description" name="description">@ViewBag.Description</textarea>
     </div>
-    <br />
+
     <button type="submit" class="btn btn-primary">Create</button>
-    <label style="color: red;">
-        @ViewBag.Message
-    </label>
+    <span class="text-danger ms-2">@ViewBag.Message</span>
 </form>
