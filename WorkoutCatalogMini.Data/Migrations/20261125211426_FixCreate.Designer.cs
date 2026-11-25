@@ -12,8 +12,8 @@ using WorkoutCatalogMini.Data;
 namespace WorkoutCatalogMini.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261124215409_AddNewModels")]
-    partial class AddNewModels
+    [Migration("20261125211426_FixCreate")]
+    partial class FixCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

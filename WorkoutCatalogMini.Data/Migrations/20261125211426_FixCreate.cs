@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WorkoutCatalogMini.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddNewModels : Migration
+    public partial class FixCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
