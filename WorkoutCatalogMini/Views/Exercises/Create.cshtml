@@ -5,20 +5,28 @@
 <h1>Create Exercise</h1>
 
 <form method="post" asp-controller="Exercises" asp-action="Create">
-    @Html.AntiForgeryToken()
     <div class="form-group mb-3">
         <label for="exercise-name">Exercise Name</label>
-        <input type="text" class="form-control" id="exercise-name" name="name" value="@ViewBag.ExerciseName" required />
+        <input type="text" class="form-control" id="exercise-name" name="name" value="@ViewBag.ExerciseName" />
     </div>
 
     <div class="form-group mb-3">
-        <label for="muscle-group">Muscle Group</label>
-        <input type="text" class="form-control" id="muscle-group" name="muscle" value="@ViewBag.MuscleGroup" required />
+        <label for="muscle">Muscle Group</label>
+        <select class="form-control" id="muscle" name="muscle">
+            <option value="">Select muscle group</option>
+            <option value="Chest" selected="@((string?)ViewBag.MuscleGroup == "Chest")">Chest</option>
+            <option value="Back" selected="@((string?)ViewBag.MuscleGroup == "Back")">Back</option>
+            <option value="Shoulders" selected="@((string?)ViewBag.MuscleGroup == "Shoulders")">Shoulders</option>
+            <option value="Biceps" selected="@((string?)ViewBag.MuscleGroup == "Biceps")">Biceps</option>
+            <option value="Triceps" selected="@((string?)ViewBag.MuscleGroup == "Triceps")">Triceps</option>
+            <option value="Legs" selected="@((string?)ViewBag.MuscleGroup == "Legs")">Legs</option>
+            <option value="Abs" selected="@((string?)ViewBag.MuscleGroup == "Abs")">Abs</option>
+        </select>
     </div>
 
     <div class="form-group mb-3">
         <label for="difficulty">Difficulty</label>
-        <select class="form-control" id="difficulty" name="difficulty" required>
+        <select class="form-control" id="difficulty" name="difficulty">
             <option value="">Select difficulty</option>
             <option value="Beginner" selected="@((string?)ViewBag.Difficulty == "Beginner")">Beginner</option>
             <option value="Intermediate" selected="@((string?)ViewBag.Difficulty == "Intermediate")">Intermediate</option>
@@ -28,7 +36,7 @@
 
     <div class="form-group mb-3">
         <label for="recommended-reps">Recommended Reps</label>
-        <input type="number" min="1" class="form-control" id="recommended-reps" name="reps" value="@ViewBag.RecommendedReps" required />
+        <input type="number" min="1" class="form-control" id="recommended-reps" name="reps" value="@ViewBag.RecommendedReps" />
     </div>
 
     <div class="form-group mb-3">
@@ -37,5 +45,5 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Create</button>
-    <span class="text-danger ms-2">@ViewBag.Message</span>
+    <p class="text-danger mt-3">@ViewBag.Message</p>
 </form>

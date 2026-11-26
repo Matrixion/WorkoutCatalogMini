@@ -75,7 +75,6 @@ namespace WorkoutCatalogMini.Services
 
             var exercise = new Exercise
             {
-                ExerciseId = Guid.NewGuid(),
                 ExerciseName = name.Trim(),
                 DifficultyId = _difficulty.DifficultyId,
                 Difficulty = _difficulty,

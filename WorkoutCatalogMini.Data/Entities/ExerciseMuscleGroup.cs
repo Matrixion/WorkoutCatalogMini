@@ -9,9 +9,8 @@ namespace WorkoutCatalogMini.Data.Entities
 {
     public class ExerciseMuscleGroup
     {
-        public Guid ExerciseId { get; set; }
+        public int ExerciseId { get; set; }
         public Exercise Exercise { get; set; }
-
         public Guid MuscleGroupId { get; set; }
         public MuscleGroup MuscleGroup { get; set; }
     }

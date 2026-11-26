@@ -12,8 +12,8 @@ using WorkoutCatalogMini.Data;
 namespace WorkoutCatalogMini.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261125211426_FixCreate")]
-    partial class FixCreate
+    [Migration("20261126192420_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,9 +42,11 @@ namespace WorkoutCatalogMini.Data.Migrations
 
             modelBuilder.Entity("WorkoutCatalogMini.Data.Entities.Exercise", b =>
                 {
-                    b.Property<Guid>("ExerciseId")
+                    b.Property<int>("ExerciseId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExerciseId"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -65,6 +67,21 @@ namespace WorkoutCatalogMini.Data.Migrations
                     b.HasIndex("DifficultyId");
 
                     b.ToTable("Exercises");
+                });
+
+            modelBuilder.Entity("WorkoutCatalogMini.Data.Entities.ExerciseMuscleGroup", b =>
+                {
+                    b.Property<int>("ExerciseId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("MuscleGroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ExerciseId", "MuscleGroupId");
+
+                    b.HasIndex("MuscleGroupId");
+
+                    b.ToTable("ExerciseMuscleGroups");
                 });
 
             modelBuilder.Entity("WorkoutCatalogMini.Data.Entities.MuscleGroup", b =>
@@ -93,7 +110,36 @@ namespace WorkoutCatalogMini.Data.Migrations
                     b.Navigation("Difficulty");
                 });
 
+            modelBuilder.Entity("WorkoutCatalogMini.Data.Entities.ExerciseMuscleGroup", b =>
+                {
+                    b.HasOne("WorkoutCatalogMini.Data.Entities.Exercise", "Exercise")
+                        .WithMany("MuscleGroups")
+                        .HasForeignKey("ExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WorkoutCatalogMini.Data.Entities.MuscleGroup", "MuscleGroup")
+                        .WithMany("Exercises")
+                        .HasForeignKey("MuscleGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Exercise");
+
+                    b.Navigation("MuscleGroup");
+                });
+
             modelBuilder.Entity("WorkoutCatalogMini.Data.Entities.Difficulty", b =>
+                {
+                    b.Navigation("Exercises");
+                });
+
+            modelBuilder.Entity("WorkoutCatalogMini.Data.Entities.Exercise", b =>
+                {
+                    b.Navigation("MuscleGroups");
+                });
+
+            modelBuilder.Entity("WorkoutCatalogMini.Data.Entities.MuscleGroup", b =>
                 {
                     b.Navigation("Exercises");
                 });

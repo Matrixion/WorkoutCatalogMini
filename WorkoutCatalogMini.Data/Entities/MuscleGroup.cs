@@ -11,6 +11,7 @@ namespace WorkoutCatalogMini.Data.Entities
     {
         public Guid MuscleGroupId { get; set; }
         public string MuscleName { get; set; }
-        public ICollection<ExerciseMuscleGroup> Exercises = new List<ExerciseMuscleGroup>();
+        public ICollection<ExerciseMuscleGroup> Exercises { get; set; }
+            = new List<ExerciseMuscleGroup>();
     }
 }
